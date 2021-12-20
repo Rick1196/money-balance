@@ -7,10 +7,10 @@ import {
 } from "firebase/auth";
 import { Button } from "@mui/material";
 
-import { auth, googleAuthProvider } from "../firebase/firebaseConfig";
+import { auth, googleAuthProvider } from "../../firebase/config";
 import propTypes from "prop-types";
 
-export default function GoogleAuth({ loginSuccessCallback }) {
+function GoogleAuth({ loginSuccessCallback }) {
   const loginWithGoogle = async () => {
     try {
       await setPersistence(auth, browserSessionPersistence);
@@ -39,3 +39,4 @@ export default function GoogleAuth({ loginSuccessCallback }) {
 GoogleAuth.propTypes = {
   loginSuccessCallback: propTypes.func.isRequired,
 };
+export default GoogleAuth;

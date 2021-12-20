@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PropTypes } from "prop-types";
-import { useSessionData } from "../../hooks/useSessionData";
+import { authContext } from "../auth-provider/authProvider";
 
 const withSession = (WrappedComponent) => {
   const WithSession = () => {
-    const auth = useSessionData();
+    const auth = useContext(authContext);
     return <WrappedComponent auth={auth} />;
   };
   return WithSession;
