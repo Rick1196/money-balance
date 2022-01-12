@@ -1,27 +1,55 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, List, Button } from "@mui/material";
-import { ListItem, ListItemText } from "@mui/material";
-import useMovementsList from "../../hooks/useFetchAccount";
+import {
+  ListItem,
+  ListItemText,
+  Typography,
+  Container,
+  List,
+  Button,
+} from "@mui/material";
+import { toast } from "react-toastify";
+import useMovementsList from "../../hooks/useFetchTransactions";
 import AddMovement from "./addMovement";
 import MovementItem from "./movementItem";
 import SkeletonList from "../../components/skeleton/skeletonList";
-import { postTransaction } from "../../api/accounts";
+import { postTransaction, updateAccountBalance } from "../../api/accounts";
+import { currencyFormatter } from "../../constants/constants";
+import useFetchAccount from "../../hooks/useFetchAccount";
+const transactionOperations = {
+  withdraw: (accountAmmount, transactionAmmout) =>
+    accountAmmount - transactionAmmout,
+  income: (accountAmmount, transactionAmmout) =>
+    accountAmmount + transactionAmmout,
+};
 
 const Account = () => {
   const { uid } = useParams();
+  const accountData = useFetchAccount(uid);
   const movementsList = useMovementsList({ uid });
   console.log(movementsList);
   const [transactionModal, setTransactionModal] = useState(false);
-  const submitHandler = async (values) => {
+  const submitHandler = async ({ transactionType, description, amount }) => {
     try {
-      const newTransaction = {
-        description: values.description,
-        amount: values.amount,
-        date: new Date().getTime(),
-      };
-      await postTransaction(uid, newTransaction);
-      setTransactionModal(false);
+      const updatedAmmount = transactionOperations[transactionType](
+        parseFloat(accountData.amount),
+        parseFloat(amount)
+      );
+      if (updatedAmmount >= 0) {
+        const newTransaction = {
+          transactionType: transactionType,
+          description: description,
+          amount: amount,
+          date: new Date().getTime(),
+        };
+        await postTransaction(uid, newTransaction);
+        setTransactionModal(false);
+        await updateAccountBalance(updatedAmmount, uid);
+      } else {
+        toast.error("You don't have enought money for this transaction", {
+          position: toast.POSITION.TOP_LEFT,
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -40,8 +68,11 @@ const Account = () => {
       >
         Register Transaction
       </Button>
-      {movementsList ? (
+      {movementsList && accountData ? (
         <>
+          <Typography variant="h4" gutterBottom component="div">
+            Account balance: {currencyFormatter.format(accountData.amount)}
+          </Typography>
           <ListItem
             key={"transation-header"}
             disablePadding

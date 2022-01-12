@@ -1,7 +1,14 @@
 import React from "react";
 import { Formik } from "formik";
 import { PropTypes } from "prop-types";
-import { TextField, Input, InputLabel, InputAdornment } from "@mui/material";
+import {
+  TextField,
+  Input,
+  InputLabel,
+  InputAdornment,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import {
   CustomForm,
   FullButton,
@@ -9,12 +16,17 @@ import {
   CustomFormControl,
 } from "../../components/form/form";
 import ModalContainer from "../../components/modal-container/modalContainer";
+import { transactions } from "../../constants";
 
 const AddMovement = ({ when, submitHandler, handleCloseEvent }) => {
   return (
     <ModalContainer when={when} handleCloseEvent={handleCloseEvent}>
       <Formik
-        initialValues={{ amount: 0, description: "" }}
+        initialValues={{
+          amount: 0,
+          description: "",
+          transactionType: transactions.WITHDRAW,
+        }}
         validate={(values) => {
           const errors = {};
           if (!values.description) {
@@ -42,6 +54,22 @@ const AddMovement = ({ when, submitHandler, handleCloseEvent }) => {
         }) => (
           <CustomForm onSubmit={handleSubmit}>
             <FormTitle>Transaction</FormTitle>
+            <CustomFormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-amount">
+                Transaction type
+              </InputLabel>
+              <Select
+                value={values.transactionType}
+                labelId="demo-simple-select-label"
+                name="transactionType"
+                label="Transaction Type"
+                onChange={handleChange}
+              >
+                <MenuItem value={transactions.INCOME}>Income</MenuItem>
+                <MenuItem value={transactions.WITHDRAW}>Withdraw</MenuItem>
+              </Select>
+            </CustomFormControl>
+            {errors.amount && touched.amount && errors.amount}
             <CustomFormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel htmlFor="standard-adornment-amount">
                 Amount

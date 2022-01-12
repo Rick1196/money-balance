@@ -1,4 +1,4 @@
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { collections } from "../constants";
 
@@ -27,6 +27,19 @@ export async function postTransaction(accountUid, transactionData) {
       transactionData
     );
     console.log(newTask);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateAccountBalance(newBalance, accountUid) {
+  try {
+    await updateDoc(
+      doc(collection(db, `${collections.ACCOUNT_COLLECTION}`), `${accountUid}`),
+      {
+        amount: newBalance,
+      }
+    );
   } catch (error) {
     console.error(error);
   }

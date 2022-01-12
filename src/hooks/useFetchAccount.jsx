@@ -1,37 +1,35 @@
 import { useState, useCallback, useEffect } from "react";
-import { onSnapshot, collection, query } from "firebase/firestore";
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { collections } from "../constants";
 
-const useMovementsList = ({ uid }) => {
-  const [movementsList, setMovementsList] = useState(null);
-  const queryMovements = useCallback((accounUid) => {
-    const movementsQuery = query(
-      collection(
-        db,
-        `${collections.ACCOUNT_COLLECTION}/${accounUid}/${collections.MOVEMENTS_COLLECTION}`
-      )
+const useFetchAccount = (accountUid) => {
+  const [account, setAccount] = useState(null);
+  const queryAccount = useCallback((accountId) => {
+    const accountQuery = query(
+      collection(db, `${collections.ACCOUNT_COLLECTION}`),
+      where("__name__", "==", accountId)
     );
-    const querySubscription = onSnapshot(movementsQuery, (querySnapshot) => {
-      const transactions = [];
+    const unsubscribe = onSnapshot(accountQuery, (querySnapshot) => {
+      let account = null;
       querySnapshot.forEach((doc) => {
-        transactions.push({ ...doc.data(), uid: doc.id });
+        account = { ...doc.data(), uid: doc.id };
       });
-      setMovementsList(transactions);
+      console.log(account);
+      setAccount(account);
     });
-    return querySubscription;
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
-    if (uid) {
-      console.log(uid);
-      const removeTeamsSubscription = queryMovements(uid);
+    if (accountUid) {
+      const removeTeamsSubscription = queryAccount(accountUid);
       return () => {
         removeTeamsSubscription();
       };
     }
-  }, [uid, queryMovements]);
-  return movementsList;
+  }, [accountUid, queryAccount]);
+  return account;
 };
 
-export default useMovementsList;
+export default useFetchAccount;

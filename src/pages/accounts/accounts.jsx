@@ -7,6 +7,7 @@ import withSession from "../../components/auth-consumer/withSession";
 import { postAccount } from "../../api/accounts";
 import useFetchAccounts from "../../hooks/useFetchAccounts";
 import SkeletonList from "../../components/skeleton/skeletonList";
+import AccountBalance from "./accountBalance";
 
 const Accounts = ({ ...props }) => {
   const { auth } = props;
@@ -43,7 +44,14 @@ const Accounts = ({ ...props }) => {
       >
         New account
       </Button>
-      {accounts ? <AccountsList accounts={accounts} /> : <SkeletonList />}
+      {accounts ? (
+        <>
+          <AccountBalance accounts={accounts} />
+          <AccountsList accounts={accounts} />
+        </>
+      ) : (
+        <SkeletonList />
+      )}
     </Container>
   );
 };
