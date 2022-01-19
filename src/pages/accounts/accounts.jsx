@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { Container, Button } from "@mui/material";
+import { Container, Button, Alert, AlertTitle } from "@mui/material";
 import AccountsList from "./accountsList";
 import CreateAccount from "./createAccount";
 import withSession from "../../components/auth-consumer/withSession";
@@ -11,7 +11,7 @@ import AccountBalance from "./accountBalance";
 
 const Accounts = ({ ...props }) => {
   const { auth } = props;
-  const accounts = useFetchAccounts(auth);
+  const { data, isLoading, error } = useFetchAccounts(auth.data);
   const [createAccountModal, setCreateAccountModal] = useState(false);
 
   const submitHandler = async (values) => {
@@ -20,7 +20,7 @@ const Accounts = ({ ...props }) => {
         title: values.title,
         description: values.description,
         amount: values.amount,
-        owner: auth.uid,
+        owner: auth.data.uid,
       };
       await postAccount(newAccount);
       setCreateAccountModal(false);
@@ -44,13 +44,18 @@ const Accounts = ({ ...props }) => {
       >
         New account
       </Button>
-      {accounts ? (
+      {data && !error && !isLoading && (
         <>
-          <AccountBalance accounts={accounts} />
-          <AccountsList accounts={accounts} />
+          <AccountBalance accounts={data} />
+          <AccountsList accounts={data} />
         </>
-      ) : (
-        <SkeletonList />
+      )}
+      {isLoading && <SkeletonList />}
+      {error && (
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          This is an error alert — <strong>{error}!</strong>
+        </Alert>
       )}
     </Container>
   );

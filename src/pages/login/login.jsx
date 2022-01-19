@@ -4,8 +4,7 @@ import Styles from "./login.styles";
 import GoogleAuth from "../../components/google-auth";
 const Login = () => {
   const history = useHistory();
-  const onLoginSuccess = (userData) => {
-    console.log(userData);
+  const onLoginSuccess = () => {
     history.push("/accounts");
   };
   return (

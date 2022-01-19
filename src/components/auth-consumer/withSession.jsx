@@ -4,8 +4,8 @@ import { authContext } from "../auth-provider/authProvider";
 
 const withSession = (WrappedComponent) => {
   const WithSession = () => {
-    const auth = useContext(authContext);
-    return <WrappedComponent auth={auth} />;
+    const {data, isLoading, error} = useContext(authContext);
+    return <WrappedComponent auth={{data, isLoading, error}} />;
   };
   return WithSession;
 };

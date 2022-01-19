@@ -33,9 +33,9 @@ function UserAvatar({ ...props }) {
   const settings = [{ label: "Logout", action: logOut }];
   return (
     <>
-      {auth ? (
-        <Tooltip title={auth.displayName} onClick={handleOpenUserMenu}>
-          <Avatar alt={auth.displayName} src={auth.photoURL}></Avatar>
+      {auth.data && !auth.isLoading ? (
+        <Tooltip title={auth.data.displayName} onClick={handleOpenUserMenu}>
+          <Avatar alt={auth.data.displayName} src={auth.data.photoURL}></Avatar>
         </Tooltip>
       ) : null}
       <Menu

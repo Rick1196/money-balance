@@ -1,10 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { onSnapshot, collection, query } from "firebase/firestore";
+import { useQuery, useQueryClient } from "react-query";
 import { db } from "../firebase/config";
-import { collections } from "../constants";
+import { collections, stores } from "../constants";
 
 const useMovementsList = ({ uid }) => {
-  const [movementsList, setMovementsList] = useState(null);
+  const queryClient = useQueryClient();
   const queryMovements = useCallback((accounUid) => {
     const movementsQuery = query(
       collection(
@@ -17,21 +18,23 @@ const useMovementsList = ({ uid }) => {
       querySnapshot.forEach((doc) => {
         transactions.push({ ...doc.data(), uid: doc.id });
       });
-      setMovementsList(transactions);
+      queryClient.setQueryData(
+        `${stores.TRANSACTIONS_STORE}/${uid}`,
+        transactions
+      );
     });
     return querySubscription;
   }, []);
 
   useEffect(() => {
     if (uid) {
-      console.log(uid);
       const removeTeamsSubscription = queryMovements(uid);
       return () => {
         removeTeamsSubscription();
       };
     }
   }, [uid, queryMovements]);
-  return movementsList;
+  return useQuery( `${stores.TRANSACTIONS_STORE}/${uid}`, () => new Promise(() => {}), {});
 };
 
 export default useMovementsList;

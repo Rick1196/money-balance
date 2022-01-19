@@ -15,7 +15,6 @@ function GoogleAuth({ loginSuccessCallback }) {
     try {
       await setPersistence(auth, browserSessionPersistence);
       const googleSession = await signInWithPopup(auth, googleAuthProvider);
-      console.log(googleSession);
       loginSuccessCallback(googleSession);
     } catch (error) {
       const errorCode = error.code;

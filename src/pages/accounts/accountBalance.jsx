@@ -10,7 +10,10 @@ const AccountBalance = ({ accounts }) => {
       minimumFractionDigits: 2,
     }).format(amount);
   const total = useMemo(() => {
-    return accounts.reduce((acc, account) => acc + account.amount, 0);
+    return accounts.reduce(
+      (acc, account) => parseFloat(acc) + parseFloat(account.amount),
+      0
+    );
   }, [accounts]);
   return (
     <Typography variant="h4" gutterBottom component="div">

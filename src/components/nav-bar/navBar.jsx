@@ -9,15 +9,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import withSession from "../../components/auth-consumer/withSession";
 import UserAvatar from "./userAvatar";
 const pages = [];
 
 // eslint-disable-next-line react/prop-types
-const NavBar = ({ ...rest }) => {
-  // eslint-disable-next-line react/prop-types
-  const { auth } = rest;
-  console.log(auth);
+const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -104,4 +100,4 @@ const NavBar = ({ ...rest }) => {
     </AppBar>
   );
 };
-export default withSession(NavBar);
+export default NavBar;

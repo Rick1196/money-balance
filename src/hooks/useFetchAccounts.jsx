@@ -1,10 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
+import { useQuery, useQueryClient } from "react-query";
 import { db } from "../firebase/config";
-import { collections } from "../constants";
+import { collections, stores } from "../constants";
 
 const useFetchAccounts = (userData) => {
-  const [accountsList, setTeamList] = useState(null);
+  const queryClient = useQueryClient();
   const queryTeams = useCallback((userData) => {
     const q = query(
       collection(db, collections.ACCOUNT_COLLECTION),
@@ -15,8 +16,7 @@ const useFetchAccounts = (userData) => {
       querySnapshot.forEach((doc) => {
         accounts.push({ ...doc.data(), uid: doc.id });
       });
-      console.log(accounts);
-      setTeamList(accounts);
+      queryClient.setQueryData(stores.ACCOUNTS_STORE, accounts);
     });
     return unsubscribe;
   }, []);
@@ -29,7 +29,7 @@ const useFetchAccounts = (userData) => {
       };
     }
   }, [userData, queryTeams]);
-  return accountsList;
+  return useQuery(stores.ACCOUNTS_STORE, () => new Promise(() => {}), {});
 };
 
 export default useFetchAccounts;

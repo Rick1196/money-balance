@@ -15,7 +15,6 @@ const useFetchAccount = (accountUid) => {
       querySnapshot.forEach((doc) => {
         account = { ...doc.data(), uid: doc.id };
       });
-      console.log(account);
       setAccount(account);
     });
     return unsubscribe;

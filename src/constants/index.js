@@ -7,3 +7,10 @@ export const transactions = {
   INCOME: "income",
   WITHDRAW: "withdraw",
 };
+
+
+export const stores = {
+  ACCOUNTS_STORE: "accounts",
+  SESSION_STORE: "session",
+  TRANSACTIONS_STORE: "transactions",
+}

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   ListItem,
@@ -15,7 +16,9 @@ import MovementItem from "./movementItem";
 import SkeletonList from "../../components/skeleton/skeletonList";
 import { postTransaction, updateAccountBalance } from "../../api/accounts";
 import { currencyFormatter } from "../../constants/constants";
-import useFetchAccount from "../../hooks/useFetchAccount";
+import useFetchAccounts from "../../hooks/useFetchAccounts";
+import withSession from "../../components/auth-consumer/withSession";
+
 const transactionOperations = {
   withdraw: (accountAmmount, transactionAmmout) =>
     accountAmmount - transactionAmmout,
@@ -23,11 +26,23 @@ const transactionOperations = {
     accountAmmount + transactionAmmout,
 };
 
-const Account = () => {
+const Account = ({ auth }) => {
   const { uid } = useParams();
-  const accountData = useFetchAccount(uid);
+  const accounts = useFetchAccounts(auth.data);
+  const [accountData, setAccountData] = useState(null);
   const movementsList = useMovementsList({ uid });
-  console.log(movementsList);
+
+  useEffect(() => {
+    if (accounts.data && uid && !accounts.isLoading && !accounts.error) {
+      const currentAccount = accounts.data.find(
+        (account) => account.uid === uid
+      );
+      if (currentAccount) {
+        setAccountData(currentAccount);
+      }
+    }
+  }, [accounts.data, accounts.isLoading, accounts.error, uid]);
+
   const [transactionModal, setTransactionModal] = useState(false);
   const submitHandler = async ({ transactionType, description, amount }) => {
     try {
@@ -68,7 +83,7 @@ const Account = () => {
       >
         Register Transaction
       </Button>
-      {movementsList && accountData ? (
+      {movementsList.data && !movementsList.isLoading && accountData ? (
         <>
           <Typography variant="h4" gutterBottom component="div">
             Account balance: {currencyFormatter.format(accountData.amount)}
@@ -83,7 +98,7 @@ const Account = () => {
             <ListItemText id={`amount-header`} primary={"Amount"} />
           </ListItem>
           <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-            {movementsList.map((movement) => (
+            {movementsList.data.map((movement) => (
               <MovementItem
                 movement={movement}
                 key={`movement-${movement.uid}`}
@@ -98,4 +113,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default withSession(Account);
