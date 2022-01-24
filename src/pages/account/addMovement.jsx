@@ -16,14 +16,14 @@ import {
   CustomFormControl,
 } from "../../components/form/form";
 import ModalContainer from "../../components/modal-container/modalContainer";
-import { transactions } from "../../constants";
+import { transactions, validationsRegex } from "../../constants";
 
 const AddMovement = ({ when, submitHandler, handleCloseEvent }) => {
   return (
     <ModalContainer when={when} handleCloseEvent={handleCloseEvent}>
       <Formik
         initialValues={{
-          amount: 0,
+          amount: "",
           description: "",
           transactionType: transactions.WITHDRAW,
         }}
@@ -34,6 +34,8 @@ const AddMovement = ({ when, submitHandler, handleCloseEvent }) => {
           }
           if (values.amount === null || values.amount === undefined) {
             errors.amount = "Required";
+          } else if (!String(values.amount).match(validationsRegex.number)) {
+            errors.amount = "Thsi field must be a number";
           }
           return errors;
         }}
@@ -79,6 +81,7 @@ const AddMovement = ({ when, submitHandler, handleCloseEvent }) => {
                 id="standard-adornment-amount"
                 value={values.amount}
                 onChange={handleChange}
+                placeholder="0.00"
                 startAdornment={
                   <InputAdornment position="start">$</InputAdornment>
                 }

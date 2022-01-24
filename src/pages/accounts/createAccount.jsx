@@ -9,12 +9,13 @@ import {
   CustomFormControl,
 } from "../../components/form/form";
 import ModalContainer from "../../components/modal-container/modalContainer";
+import { validationsRegex } from "../../constants";
 
 const CreateAccount = ({ when, submitHandler, handleCloseEvent }) => {
   return (
     <ModalContainer when={when} handleCloseEvent={handleCloseEvent}>
       <Formik
-        initialValues={{ title: "", description: "", amount: 0 }}
+        initialValues={{ title: "", description: "", amount: "" }}
         validate={(values) => {
           const errors = {};
           if (!values.title) {
@@ -25,6 +26,8 @@ const CreateAccount = ({ when, submitHandler, handleCloseEvent }) => {
           }
           if (values.amount === null || values.amount === undefined) {
             errors.amount = "Required";
+          }else if(!String(values.amount).match(validationsRegex.number)){
+            errors.amount = 'Thsi field must be a number';
           }
           return errors;
         }}
@@ -65,6 +68,7 @@ const CreateAccount = ({ when, submitHandler, handleCloseEvent }) => {
                 id="standard-adornment-amount"
                 value={values.amount}
                 onChange={handleChange}
+                placeholder="0.00"
                 startAdornment={
                   <InputAdornment position="start">$</InputAdornment>
                 }
