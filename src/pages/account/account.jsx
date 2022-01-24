@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { Timestamp } from "firebase/firestore";
-import { sub } from "date-fns";
 import useMovementsList from "../../hooks/useFetchTransactions";
 import AddMovement from "./addMovement";
 import MovementItem from "./movementItem";
@@ -59,7 +58,7 @@ const Account = ({ auth }) => {
           transactionType: transactionType,
           description: description,
           amount: amount,
-          createdAt: Timestamp.fromDate(sub(new Date(), { years: 4 })),
+          createdAt: Timestamp.fromDate(new Date()),
         };
         await postTransaction(uid, newTransaction);
         setTransactionModal(false);

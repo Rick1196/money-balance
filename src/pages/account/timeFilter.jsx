@@ -12,7 +12,6 @@ const TimeFilter = ({ onFilterChange }) => {
 
   useEffect(() => {
     const calculatedFilter = calculateDate;
-    console.log(currentFilter, calculatedFilter);
     onFilterChange(calculatedFilter);
   }),
     [currentFilter];

@@ -21,7 +21,7 @@ const Accounts = ({ ...props }) => {
         description: values.description,
         amount: values.amount,
         owner: auth.data.uid,
-        createdAt: Timestamp.fromDate(new Date().toUTCString()),
+        createdAt: Timestamp.fromDate(new Date()),
       };
       await postAccount(newAccount);
       setCreateAccountModal(false);
