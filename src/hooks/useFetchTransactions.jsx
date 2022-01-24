@@ -1,17 +1,26 @@
 import { useCallback, useEffect } from "react";
-import { onSnapshot, collection, query } from "firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  query,
+  orderBy,
+  where,
+} from "firebase/firestore";
 import { useQuery, useQueryClient } from "react-query";
+import { Timestamp } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { collections, stores } from "../constants";
 
-const useMovementsList = ({ uid }) => {
+const useMovementsList = ({ uid, filterDate }) => {
   const queryClient = useQueryClient();
-  const queryMovements = useCallback((accounUid) => {
+  const queryMovements = useCallback((accounUid, date) => {
     const movementsQuery = query(
       collection(
         db,
         `${collections.ACCOUNT_COLLECTION}/${accounUid}/${collections.MOVEMENTS_COLLECTION}`
-      )
+      ),
+      orderBy("createdAt", "desc"),
+      where("createdAt", ">=", Timestamp.fromDate(date))
     );
     const querySubscription = onSnapshot(movementsQuery, (querySnapshot) => {
       const transactions = [];
@@ -27,14 +36,18 @@ const useMovementsList = ({ uid }) => {
   }, []);
 
   useEffect(() => {
-    if (uid) {
-      const removeTeamsSubscription = queryMovements(uid);
+    if (uid && filterDate) {
+      const removeTeamsSubscription = queryMovements(uid, filterDate);
       return () => {
         removeTeamsSubscription();
       };
     }
-  }, [uid, queryMovements]);
-  return useQuery( `${stores.TRANSACTIONS_STORE}/${uid}`, () => new Promise(() => {}), {});
+  }, [uid, queryMovements, filterDate]);
+  return useQuery(
+    `${stores.TRANSACTIONS_STORE}/${uid}`,
+    () => new Promise(() => {}),
+    {}
+  );
 };
 
 export default useMovementsList;

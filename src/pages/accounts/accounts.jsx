@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import { Container, Button, Alert, AlertTitle } from "@mui/material";
+import { Timestamp } from "firebase/firestore";
 import AccountsList from "./accountsList";
 import CreateAccount from "./createAccount";
 import withSession from "../../components/auth-consumer/withSession";
@@ -13,7 +14,6 @@ const Accounts = ({ ...props }) => {
   const { auth } = props;
   const { data, isLoading, error } = useFetchAccounts(auth.data);
   const [createAccountModal, setCreateAccountModal] = useState(false);
-
   const submitHandler = async (values) => {
     try {
       const newAccount = {
@@ -21,6 +21,7 @@ const Accounts = ({ ...props }) => {
         description: values.description,
         amount: values.amount,
         owner: auth.data.uid,
+        createdAt: Timestamp.fromDate(new Date().toUTCString()),
       };
       await postAccount(newAccount);
       setCreateAccountModal(false);
@@ -50,7 +51,7 @@ const Accounts = ({ ...props }) => {
           <AccountsList accounts={data} />
         </>
       )}
-      {isLoading && <SkeletonList />}
+      {isLoading && !error && <SkeletonList />}
       {error && (
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { onSnapshot, collection, query, where } from "firebase/firestore";
+import { onSnapshot, collection, query, where, orderBy } from "firebase/firestore";
 import { useQuery, useQueryClient } from "react-query";
 import { db } from "../firebase/config";
 import { collections, stores } from "../constants";
@@ -9,7 +9,8 @@ const useFetchAccounts = (userData) => {
   const queryTeams = useCallback((userData) => {
     const q = query(
       collection(db, collections.ACCOUNT_COLLECTION),
-      where("owner", "==", userData.uid)
+      where("owner", "==", userData.uid),
+      orderBy("createdAt", "desc")
     );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const accounts = [];

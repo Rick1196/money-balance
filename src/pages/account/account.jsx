@@ -10,6 +10,8 @@ import {
   Button,
 } from "@mui/material";
 import { toast } from "react-toastify";
+import { Timestamp } from "firebase/firestore";
+import { sub } from "date-fns";
 import useMovementsList from "../../hooks/useFetchTransactions";
 import AddMovement from "./addMovement";
 import MovementItem from "./movementItem";
@@ -18,6 +20,7 @@ import { postTransaction, updateAccountBalance } from "../../api/accounts";
 import { currencyFormatter } from "../../constants/constants";
 import useFetchAccounts from "../../hooks/useFetchAccounts";
 import withSession from "../../components/auth-consumer/withSession";
+import TimeFilter from "./timeFilter";
 
 const transactionOperations = {
   withdraw: (accountAmmount, transactionAmmout) =>
@@ -30,7 +33,8 @@ const Account = ({ auth }) => {
   const { uid } = useParams();
   const accounts = useFetchAccounts(auth.data);
   const [accountData, setAccountData] = useState(null);
-  const movementsList = useMovementsList({ uid });
+  const [filterDate, setFilterDate] = useState(null);
+  const movementsList = useMovementsList({ uid, filterDate });
 
   useEffect(() => {
     if (accounts.data && uid && !accounts.isLoading && !accounts.error) {
@@ -55,7 +59,7 @@ const Account = ({ auth }) => {
           transactionType: transactionType,
           description: description,
           amount: amount,
-          date: new Date().getTime(),
+          createdAt: Timestamp.fromDate(sub(new Date(), { years: 4 })),
         };
         await postTransaction(uid, newTransaction);
         setTransactionModal(false);
@@ -69,6 +73,8 @@ const Account = ({ auth }) => {
       console.error(error);
     }
   };
+
+
   return (
     <Container maxWidth="sm" sx={{ marginTop: "1em" }}>
       <AddMovement
@@ -83,7 +89,11 @@ const Account = ({ auth }) => {
       >
         Register Transaction
       </Button>
-      {movementsList.data && !movementsList.isLoading && accountData ? (
+      <TimeFilter onFilterChange={setFilterDate} />
+      {movementsList.data &&
+      !movementsList.isLoading &&
+      accountData &&
+      filterDate ? (
         <>
           <Typography variant="h4" gutterBottom component="div">
             Account balance: {currencyFormatter.format(accountData.amount)}

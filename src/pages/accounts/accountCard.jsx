@@ -1,8 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
+import styled from "styled-components";
 import { Box, CardContent, CardMedia, Typography } from "@mui/material";
 import { ClickableCard } from "./accountCard.style";
+
+const LinkCard = styled(Link)`
+  text-decoration: none;`
 
 const AccountCard = ({ account, navigateToAccount }) => {
   const formatAmount = (amount) =>
@@ -12,7 +16,7 @@ const AccountCard = ({ account, navigateToAccount }) => {
       minimumFractionDigits: 2,
     }).format(amount);
   return (
-    <Link to={navigateToAccount}>
+    <LinkCard to={navigateToAccount}>
       <ClickableCard
         sx={{
           display: "flex",
@@ -24,7 +28,7 @@ const AccountCard = ({ account, navigateToAccount }) => {
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <CardContent sx={{ flex: "1 0 auto" }}>
             <Typography component="div" variant="h5">
-              {account.description}
+              {account.title}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -49,7 +53,7 @@ const AccountCard = ({ account, navigateToAccount }) => {
           alt="Live from space album cover"
         />
       </ClickableCard>
-    </Link>
+    </LinkCard>
   );
 };
 
