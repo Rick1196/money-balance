@@ -30,3 +30,7 @@ export const timeFiltersTypes = {
   year: 'year',
   allTime: 'allTime',
 }
+
+export const validationsRegex = {
+  number: /^[0-9/.]*$/,
+}
