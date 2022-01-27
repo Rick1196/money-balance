@@ -32,7 +32,7 @@ const TimeFilter = ({ onFilterChange }) => {
     }
   }, [currentFilter]);
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{ minWidth: 120, margin: '1em 0 1em 0' }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Filter by</InputLabel>
         <Select
