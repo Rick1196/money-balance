@@ -15,7 +15,11 @@ import useMovementsList from "../../hooks/useFetchTransactions";
 import AddMovement from "./addMovement";
 import MovementItem from "./movementItem";
 import SkeletonList from "../../components/skeleton/skeletonList";
-import { postTransaction, updateAccountBalance } from "../../api/accounts";
+import {
+  postCommitAtHistory,
+  postTransaction,
+  updateAccountBalance,
+} from "../../api/accounts";
 import { currencyFormatter } from "../../constants/constants";
 import useFetchAccounts from "../../hooks/useFetchAccounts";
 import withSession from "../../components/auth-consumer/withSession";
@@ -63,6 +67,12 @@ const Account = ({ auth }) => {
         await postTransaction(uid, newTransaction);
         setTransactionModal(false);
         await updateAccountBalance(updatedAmmount, uid);
+        await submitCommit(
+          newTransaction,
+          accountData.amount,
+          updatedAmmount,
+          uid
+        );
       } else {
         toast.error("You don't have enought money for this transaction", {
           position: toast.POSITION.TOP_LEFT,
@@ -73,6 +83,23 @@ const Account = ({ auth }) => {
     }
   };
 
+  const submitCommit = async (
+    transactionData,
+    accountAmount,
+    updatedAmmount,
+    accountUid
+  ) => {
+    try {
+      const newCommit = {
+        transactionData,
+        previousAccountAmount: accountAmount,
+        updatedAmmount,
+      };
+      await postCommitAtHistory(accountUid, newCommit);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: "1em" }}>

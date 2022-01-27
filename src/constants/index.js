@@ -2,6 +2,7 @@ export { currencyFormatter } from "./constants";
 export const collections = {
   ACCOUNT_COLLECTION: "accounts",
   MOVEMENTS_COLLECTION: "movements",
+  COMMIT_COLLECTION: "commits",
 };
 export const transactions = {
   INCOME: "income",

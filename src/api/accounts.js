@@ -44,3 +44,19 @@ export async function updateAccountBalance(newBalance, accountUid) {
     console.error(error);
   }
 }
+
+export async function postCommitAtHistory(accountUid, commitData) {
+  try {
+    const newCommit = await addDoc(
+      collection(
+        db,
+        `${collections.ACCOUNT_COLLECTION}`,
+        `${accountUid}/${collections.COMMIT_COLLECTION}`
+      ),
+      commitData
+    );
+    console.log(newCommit);
+  } catch (error) {
+    console.error(error);
+  }
+}
