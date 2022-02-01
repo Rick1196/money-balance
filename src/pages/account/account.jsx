@@ -1,19 +1,11 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  ListItem,
-  ListItemText,
-  Typography,
-  Container,
-  List,
-  Button,
-} from "@mui/material";
+import { Typography, Container, Button } from "@mui/material";
 import { toast } from "react-toastify";
 import { Timestamp } from "firebase/firestore";
 import useMovementsList from "../../hooks/useFetchTransactions";
 import AddMovement from "./addMovement";
-import MovementItem from "./movementItem";
 import SkeletonList from "../../components/skeleton/skeletonList";
 import {
   postCommitAtHistory,
@@ -22,8 +14,12 @@ import {
 } from "../../api/accounts";
 import { currencyFormatter } from "../../constants/constants";
 import useFetchAccounts from "../../hooks/useFetchAccounts";
+import useFetchCommits from "../../hooks/useFetchCommits";
 import withSession from "../../components/auth-consumer/withSession";
 import TimeFilter from "./timeFilter";
+import AccountTabs from "./accountTabs";
+import TransactionsHistory from "./transactionsHistory";
+import TransactionList from "./transactionsList";
 
 const transactionOperations = {
   withdraw: (accountAmmount, transactionAmmout) =>
@@ -38,6 +34,8 @@ const Account = ({ auth }) => {
   const [accountData, setAccountData] = useState(null);
   const [filterDate, setFilterDate] = useState(null);
   const movementsList = useMovementsList({ uid, filterDate });
+  // eslint-disable-next-line no-unused-vars
+  const commits = useFetchCommits({ uid });
 
   useEffect(() => {
     if (accounts.data && uid && !accounts.isLoading && !accounts.error) {
@@ -116,31 +114,15 @@ const Account = ({ auth }) => {
         Register Transaction
       </Button>
       <TimeFilter onFilterChange={setFilterDate} />
-      {movementsList.data &&
-      !movementsList.isLoading &&
-      accountData &&
-      filterDate ? (
+      {accountData && filterDate ? (
         <>
           <Typography variant="h4" gutterBottom component="div">
             Account balance: {currencyFormatter.format(accountData.amount)}
           </Typography>
-          <ListItem
-            key={"transation-header"}
-            disablePadding
-            sx={{ width: "100%" }}
-          >
-            <ListItemText id={`date-header`} primary={"Date"} />
-            <ListItemText id={`description-header`} primary={"Description"} />
-            <ListItemText id={`amount-header`} primary={"Amount"} />
-          </ListItem>
-          <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-            {movementsList.data.map((movement) => (
-              <MovementItem
-                movement={movement}
-                key={`movement-${movement.uid}`}
-              />
-            ))}
-          </List>
+          <AccountTabs
+            transactionsHistory={<TransactionsHistory transactions={commits} />}
+            transactionsList={<TransactionList movements={movementsList} />}
+          />
         </>
       ) : (
         <SkeletonList />

@@ -14,6 +14,7 @@ export const stores = {
   ACCOUNTS_STORE: "accounts",
   SESSION_STORE: "session",
   TRANSACTIONS_STORE: "transactions",
+  COMMITS_STORE: "commits",
 }
 
 export const timeFilters = [
