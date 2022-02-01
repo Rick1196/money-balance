@@ -18,7 +18,7 @@ const TransactionsHistory = ({ transactions }) => {
 };
 
 TransactionsHistory.propTypes = {
-  transactions: PropTypes.array.isRequired,
+  transactions: PropTypes.object.isRequired,
 };
 
 export default TransactionsHistory;

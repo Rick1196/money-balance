@@ -1,18 +1,20 @@
 import { useCallback, useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
+import { onSnapshot, collection, query, orderBy, where } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { collections, stores } from "../constants";
 
-const useFetchCommits = ({ uid }) => {
+const useFetchCommits = ({ uid, filterDate }) => {
   const queryClient = useQueryClient();
-  const queryCommits = useCallback((accounUid) => {
+  const queryCommits = useCallback((accounUid, date) => {
     const movementsQuery = query(
       collection(
         db,
         `${collections.ACCOUNT_COLLECTION}/${accounUid}/${collections.COMMIT_COLLECTION}`
       ),
-      orderBy("transactionData.createdAt", "desc")
+      orderBy("transactionData.createdAt", "desc"),
+      where("transactionData.createdAt", ">=", Timestamp.fromDate(date))
     );
     const querySubscription = onSnapshot(movementsQuery, (querySnapshot) => {
       const commits = [];
@@ -24,13 +26,13 @@ const useFetchCommits = ({ uid }) => {
     return querySubscription;
   }, []);
   useEffect(() => {
-    if (uid) {
-      const removeTeamsSubscription = queryCommits(uid);
+    if (uid && filterDate) {
+      const removeTeamsSubscription = queryCommits(uid, filterDate);
       return () => {
         removeTeamsSubscription();
       };
     }
-  }, [uid, queryCommits]);
+  }, [uid, filterDate, queryCommits]);
   return useQuery(
     `${stores.COMMITS_STORE}/${uid}`,
     () => new Promise(() => {}),

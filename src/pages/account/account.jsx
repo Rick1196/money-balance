@@ -35,7 +35,7 @@ const Account = ({ auth }) => {
   const [filterDate, setFilterDate] = useState(null);
   const movementsList = useMovementsList({ uid, filterDate });
   // eslint-disable-next-line no-unused-vars
-  const commits = useFetchCommits({ uid });
+  const commits = useFetchCommits({ uid, filterDate });
 
   useEffect(() => {
     if (accounts.data && uid && !accounts.isLoading && !accounts.error) {

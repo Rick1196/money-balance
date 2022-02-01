@@ -29,7 +29,7 @@ const TransactionList = ({ movements }) => {
 };
 
 TransactionList.propTypes = {
-  movements: PropTypes.array.isRequired,
+  movements: PropTypes.object.isRequired,
 };
 
 export default TransactionList;
