@@ -12,6 +12,7 @@ import { PropTypes } from "prop-types";
 import { format } from "date-fns";
 import SkeletonList from "../../components/skeleton/skeletonList";
 import { currencyFormatter, transactions } from "../../constants";
+import { truncateString } from "../../utils/strings";
 
 const TransactionItem = ({ transaction }) => {
   return (
@@ -55,7 +56,7 @@ const TransactionItem = ({ transaction }) => {
         <Typography variant="h6" component="div">
           {currencyFormatter.format(transaction.updatedAmmount)}
         </Typography>
-        <Typography>{transaction.transactionData.description}</Typography>
+        <Typography>{truncateString(transaction.transactionData.description, 27)}</Typography>
       </TimelineContent>
     </TimelineItem>
   );
