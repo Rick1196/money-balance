@@ -11,6 +11,7 @@ import ForkRightIcon from "@mui/icons-material/ForkRight";
 import { PropTypes } from "prop-types";
 import { format } from "date-fns";
 import SkeletonList from "../../components/skeleton/skeletonList";
+import EmptyAlert from "../../components/alerts/empty";
 import { currencyFormatter, transactions } from "../../constants";
 import { truncateString } from "../../utils/strings";
 
@@ -63,16 +64,21 @@ const TransactionItem = ({ transaction }) => {
 };
 
 const TransactionsHistory = ({ transactions }) => {
-  const { data, isLoading, error } = transactions;
+  const { data, isLoading } = transactions;
   return (
     <div>
-      {data && !isLoading && !error && (
+      {data && data.length >= 0 && (
         <Timeline>
           {data.map((transaction) => (
             <TransactionItem transaction={transaction} key={transaction.uid} />
           ))}
         </Timeline>
       )}
+      {
+        data && data.length === 0 && (
+          <EmptyAlert content="No transactions to display"/>
+        )
+      }
       {isLoading && <SkeletonList />}
     </div>
   );
