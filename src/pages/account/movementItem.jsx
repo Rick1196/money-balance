@@ -35,7 +35,7 @@ const MovementItem = ({ movement }) => {
   return (
     <Container key={movement.uid}>
       <Item>{format(movement.createdAt.toDate(), "Pp")}</Item>
-      <Item id={`${movement.uid}-description`}>{truncateString(movement.description)}</Item>
+      <Item id={`${movement.uid}-description`}>{truncateString(movement.description, 27)}</Item>
       <Item id={`${movement.uid}-amount`}>{formatAmount(movement.amount)}</Item>
     </Container>
   );
