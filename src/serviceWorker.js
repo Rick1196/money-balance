@@ -44,7 +44,7 @@ registerRoute(
     return true;
   },
   // eslint-disable-next-line no-undef
-  createHandlerBoundToURL(REACT_APP_PUBLIC_URL + '/index.html')
+  createHandlerBoundToURL(process.env.REACT_APP_PUBLIC_URL + '/index.html')
 );
 
 // An example runtime caching route for requests that aren't handled by the
