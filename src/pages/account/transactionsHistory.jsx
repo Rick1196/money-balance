@@ -66,7 +66,7 @@ const TransactionsHistory = ({ transactions }) => {
   return (
     <div>
       {data && !isLoading && !error && (
-        <Timeline position="right">
+        <Timeline>
           {data.map((transaction) => (
             <TransactionItem transaction={transaction} key={transaction.uid} />
           ))}

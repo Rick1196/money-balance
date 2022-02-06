@@ -5,13 +5,13 @@ import TabPanel, { a11yProps } from "../../components/tabs/tabPanel";
 
 const tabs = ["Transactions", "Time Line"];
 
-const AccountTabs = ({transactionsList, transactionsHistory}) => {
+const AccountTabs = ({ transactionsList, transactionsHistory }) => {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", alignItems: "center" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
@@ -34,8 +34,8 @@ const AccountTabs = ({transactionsList, transactionsHistory}) => {
 };
 
 AccountTabs.propTypes = {
-    transactionsList: PropTypes.node.isRequired,
-    transactionsHistory: PropTypes.node.isRequired,
-}
+  transactionsList: PropTypes.node.isRequired,
+  transactionsHistory: PropTypes.node.isRequired,
+};
 
 export default AccountTabs;
