@@ -8,6 +8,7 @@ import withSession from "../../components/auth-consumer/withSession";
 import { postAccount } from "../../api/accounts";
 import useFetchAccounts from "../../hooks/useFetchAccounts";
 import SkeletonList from "../../components/skeleton/skeletonList";
+import EmptyAlert from "../../components/alerts/empty";
 import AccountBalance from "./accountBalance";
 
 const Accounts = ({ ...props }) => {
@@ -45,12 +46,15 @@ const Accounts = ({ ...props }) => {
       >
         New account
       </Button>
-      {data && !error && !isLoading && (
+      {data && data.length >= 0 && (
         <>
           <AccountBalance accounts={data} />
           <AccountsList accounts={data} />
         </>
       )}
+      {
+        data && data.length === 0 && (<EmptyAlert content="No Accounts to display"/>)
+      }
       {isLoading && !error && <SkeletonList />}
       {error && (
         <Alert severity="error">
