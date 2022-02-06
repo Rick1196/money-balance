@@ -2,6 +2,7 @@
 import React from "react";
 import { format } from "date-fns";
 import { styled } from "@mui/material/styles";
+import { truncateString } from "../../utils/strings";
 
 const Container = styled("div")`
   display: grid;
@@ -34,7 +35,7 @@ const MovementItem = ({ movement }) => {
   return (
     <Container key={movement.uid}>
       <Item>{format(movement.createdAt.toDate(), "Pp")}</Item>
-      <Item id={`${movement.uid}-description`}>{movement.description}</Item>
+      <Item id={`${movement.uid}-description`}>{truncateString(movement.description)}</Item>
       <Item id={`${movement.uid}-amount`}>{formatAmount(movement.amount)}</Item>
     </Container>
   );
