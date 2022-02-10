@@ -15,7 +15,7 @@ const Accounts = ({ ...props }) => {
   const { auth } = props;
   const { data, isLoading, error } = useFetchAccounts(auth.data);
   const [createAccountModal, setCreateAccountModal] = useState(false);
-  const submitHandler = async (values) => {
+  const submitHandler = async (values, setSubmitting) => {
     try {
       const newAccount = {
         title: values.title,
@@ -26,8 +26,10 @@ const Accounts = ({ ...props }) => {
       };
       await postAccount(newAccount);
       setCreateAccountModal(false);
+      setSubmitting();
     } catch (error) {
       console.error(error);
+      setSubmitting();
     }
   };
   return (
