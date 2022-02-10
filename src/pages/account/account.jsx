@@ -49,7 +49,7 @@ const Account = ({ auth }) => {
   }, [accounts.data, accounts.isLoading, accounts.error, uid]);
 
   const [transactionModal, setTransactionModal] = useState(false);
-  const submitHandler = async ({ transactionType, description, amount }) => {
+  const submitHandler = async ({ transactionType, description, amount }, setSubmitting) => {
     try {
       const updatedAmmount = transactionOperations[transactionType](
         parseFloat(accountData.amount),
@@ -76,8 +76,10 @@ const Account = ({ auth }) => {
           position: toast.POSITION.TOP_LEFT,
         });
       }
+      setSubmitting();
     } catch (error) {
       console.error(error);
+      setSubmitting();
     }
   };
 

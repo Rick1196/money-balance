@@ -32,8 +32,7 @@ const CreateAccount = ({ when, submitHandler, handleCloseEvent }) => {
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          submitHandler(values);
-          setSubmitting(false);
+          submitHandler(values, () => setSubmitting(false));
         }}
       >
         {({
@@ -46,7 +45,7 @@ const CreateAccount = ({ when, submitHandler, handleCloseEvent }) => {
           isSubmitting,
           /* and other goodies */
         }) => (
-          <CustomForm onSubmit={handleSubmit}>
+          <CustomForm onSubmit={handleSubmit} autoComplete="off">
             <FormTitle>Create new Account</FormTitle>
             <TextField
               fullWidth

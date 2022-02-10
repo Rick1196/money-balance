@@ -40,8 +40,7 @@ const AddMovement = ({ when, submitHandler, handleCloseEvent }) => {
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          submitHandler(values);
-          setSubmitting(false);
+          submitHandler(values, () => setSubmitting(false));
         }}
       >
         {({
@@ -54,7 +53,7 @@ const AddMovement = ({ when, submitHandler, handleCloseEvent }) => {
           isSubmitting,
           /* and other goodies */
         }) => (
-          <CustomForm onSubmit={handleSubmit}>
+          <CustomForm onSubmit={handleSubmit} autoComplete="off">
             <FormTitle>Transaction</FormTitle>
             <CustomFormControl fullWidth sx={{ m: 1 }} variant="standard">
               <InputLabel htmlFor="standard-adornment-amount">
