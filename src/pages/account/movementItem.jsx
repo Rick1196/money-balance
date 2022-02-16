@@ -3,6 +3,7 @@ import React from "react";
 import { format } from "date-fns";
 import { styled } from "@mui/material/styles";
 import { truncateString } from "../../utils/strings";
+import { currencyFormatter } from "../../constants";
 
 const Container = styled("div")`
   display: grid;
@@ -24,19 +25,15 @@ const Item = styled("div")(({ theme }) => ({
   margin: "1em 0 1em 0",
 }));
 
-const MovementItem = ({ movement }) => {
-  const formatAmount = (amount) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format(amount);
+const MovementItem = ({ movement, handleClick }) => {
 
   return (
-    <Container key={movement.uid}>
+    <Container key={movement.uid} onClick={() => handleClick(movement)}>
       <Item>{format(movement.createdAt.toDate(), "Pp")}</Item>
-      <Item id={`${movement.uid}-description`}>{truncateString(movement.description, 27)}</Item>
-      <Item id={`${movement.uid}-amount`}>{formatAmount(movement.amount)}</Item>
+      <Item id={`${movement.uid}-description`}>
+        {truncateString(movement.description, 27)}
+      </Item>
+      <Item id={`${movement.uid}-amount`}>{currencyFormatter.format(movement.amount)}</Item>
     </Container>
   );
 };

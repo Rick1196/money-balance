@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { ListItem, ListItemText, List } from "@mui/material";
 import PropTypes from "prop-types";
 import MovementItem from "./movementItem";
 import SkeletonList from "../../components/skeleton/skeletonList";
 import EmptyAlert from "../../components/alerts/empty";
+import TransactionDetail from "./transactionDetail";
 
 const TransactionList = ({ movements }) => {
+  const [displayMovementDetails, setDisplayMovementDetails] = useState(null);
   const { data, isLoading } = movements;
   return (
     <>
@@ -15,14 +17,22 @@ const TransactionList = ({ movements }) => {
         <ListItemText id={`amount-header`} primary={"Amount"} />
       </ListItem>
       {data && data.length >= 0 && (
+        <>
         <List sx={{ width: "100%", bgcolor: "background.paper" }}>
           {data.map((movement) => (
             <MovementItem
               movement={movement}
               key={`movement-${movement.uid}`}
+              handleClick={(transaction) => setDisplayMovementDetails(transaction)}
             />
           ))}
         </List>
+         <TransactionDetail
+         when={displayMovementDetails !== null}
+         transactionData={displayMovementDetails}
+         handleClose={() => setDisplayMovementDetails(null)}
+       />
+       </>
       )}
       {data && data.length === 0 && (
         <EmptyAlert content="No Transactions to display" />

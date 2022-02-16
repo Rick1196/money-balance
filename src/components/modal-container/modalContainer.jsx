@@ -3,7 +3,7 @@ import { Box, Modal } from "@mui/material";
 import { PropTypes } from "prop-types";
 import Style from "./modal.style";
 
-const ModalContainer = ({ when, children, handleCloseEvent }) => {
+const ModalContainer = ({ when, children, handleCloseEvent, customStyle }) => {
   const [open, setOpen] = useState(when);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const ModalContainer = ({ when, children, handleCloseEvent }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={Style}>{children}</Box>
+      <Box sx={customStyle || Style}>{children}</Box>
     </Modal>
   ) : null;
 };
@@ -31,6 +31,7 @@ ModalContainer.propTypes = {
   when: PropTypes.bool,
   children: PropTypes.node,
   handleCloseEvent: PropTypes.func,
+  customStyle: PropTypes.object,
 };
 
 export default ModalContainer;
