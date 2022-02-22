@@ -55,7 +55,31 @@ export async function postCommitAtHistory(accountUid, commitData) {
       ),
       commitData
     );
-    console.log(newCommit);
+    return newCommit;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function postTransactionExpenses(
+  accountUid,
+  transactionUid,
+  expenseData
+) {
+  try {
+    const newExpense = await addDoc(
+      collection(
+        db,
+        collections.MOVEMENTS_EXPENSES_COLLECTION([
+          collections.ACCOUNT_COLLECTION,
+          accountUid,
+          collections.MOVEMENTS_COLLECTION,
+          transactionUid,
+        ]),
+        expenseData
+      )
+    );
+    return newExpense;
   } catch (error) {
     console.error(error);
   }

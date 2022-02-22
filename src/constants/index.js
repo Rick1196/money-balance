@@ -3,6 +3,7 @@ export const collections = {
   ACCOUNT_COLLECTION: "accounts",
   MOVEMENTS_COLLECTION: "movements",
   COMMIT_COLLECTION: "commits",
+  MOVEMENTS_EXPENSES_COLLECTION: (path) => `${path.join("/")}/expenses`,
 };
 export const transactions = {
   INCOME: "income",
@@ -15,6 +16,7 @@ export const stores = {
   SESSION_STORE: "session",
   TRANSACTIONS_STORE: "transactions",
   COMMITS_STORE: "commits",
+  EXPENSES_STORE: "expenses"
 }
 
 export const timeFilters = [
