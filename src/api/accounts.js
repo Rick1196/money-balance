@@ -4,12 +4,10 @@ import { collections } from "../constants";
 
 export async function postAccount(accountData) {
   try {
-    console.log(accountData);
     const newAccountData = await addDoc(
       collection(db, collections.ACCOUNT_COLLECTION),
       accountData
     );
-    console.log(newAccountData);
     return newAccountData;
   } catch (error) {
     console.error(error);
@@ -26,7 +24,7 @@ export async function postTransaction(accountUid, transactionData) {
       ),
       transactionData
     );
-    console.log(newTask);
+    return newTask;
   } catch (error) {
     console.error(error);
   }
@@ -75,9 +73,9 @@ export async function postTransactionExpenses(
           accountUid,
           collections.MOVEMENTS_COLLECTION,
           transactionUid,
-        ]),
-        expenseData
-      )
+        ])
+      ),
+      expenseData
     );
     return newExpense;
   } catch (error) {

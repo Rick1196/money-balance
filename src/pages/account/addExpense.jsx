@@ -20,7 +20,10 @@ const AddExpense = ({ onSubmitHandler }) => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         values.description = values.description.trim();
-        onSubmitHandler(values, () => setSubmitting(false));
+        onSubmitHandler(values.description, () => {
+          setSubmitting(false);
+          values.description = "";
+        });
       }}
     >
       {({
@@ -35,7 +38,9 @@ const AddExpense = ({ onSubmitHandler }) => {
       }) => (
         <CustomForm onSubmit={handleSubmit} autoComplete="off">
           <CustomFormControl fullWidth sx={{ m: 1 }} variant="standard">
-            <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>
+            <InputLabel htmlFor="new-expense">
+              Expense (Enter to submit)
+            </InputLabel>
             <Input
               value={values.description}
               labelId="new-expense"

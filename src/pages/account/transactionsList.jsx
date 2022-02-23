@@ -6,7 +6,7 @@ import SkeletonList from "../../components/skeleton/skeletonList";
 import EmptyAlert from "../../components/alerts/empty";
 import TransactionDetail from "./transactionDetail";
 
-const TransactionList = ({ movements }) => {
+const TransactionList = ({ accountUid, movements }) => {
   const [displayMovementDetails, setDisplayMovementDetails] = useState(null);
   const { data, isLoading } = movements;
   return (
@@ -18,21 +18,24 @@ const TransactionList = ({ movements }) => {
       </ListItem>
       {data && data.length >= 0 && (
         <>
-        <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-          {data.map((movement) => (
-            <MovementItem
-              movement={movement}
-              key={`movement-${movement.uid}`}
-              handleClick={(transaction) => setDisplayMovementDetails(transaction)}
-            />
-          ))}
-        </List>
-         <TransactionDetail
-         when={displayMovementDetails !== null}
-         transactionData={displayMovementDetails}
-         handleClose={() => setDisplayMovementDetails(null)}
-       />
-       </>
+          <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+            {data.map((movement) => (
+              <MovementItem
+                movement={movement}
+                key={`movement-${movement.uid}`}
+                handleClick={(transaction) =>
+                  setDisplayMovementDetails(transaction)
+                }
+              />
+            ))}
+          </List>
+          <TransactionDetail
+            when={displayMovementDetails !== null}
+            accountUid={accountUid}
+            transactionData={displayMovementDetails}
+            handleClose={() => setDisplayMovementDetails(null)}
+          />
+        </>
       )}
       {data && data.length === 0 && (
         <EmptyAlert content="No Transactions to display" />
@@ -44,6 +47,7 @@ const TransactionList = ({ movements }) => {
 
 TransactionList.propTypes = {
   movements: PropTypes.object.isRequired,
+  accountUid: PropTypes.string.isRequired,
 };
 
 export default TransactionList;

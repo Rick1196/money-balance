@@ -23,7 +23,7 @@ const useFetchExpenses = (accounUid, transactionUid) => {
       querySnapshot.forEach((doc) => {
         expenses.push({ ...doc.data(), uid: doc.id });
       });
-      queryClient.setQueryData(stores.EXPENSES_STORE, expenses);
+      queryClient.setQueryData(`${stores.EXPENSES_STORE}/${transactionUid}`, expenses);
     });
     return querySubscription;
   });

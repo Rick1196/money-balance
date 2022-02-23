@@ -122,7 +122,7 @@ const Account = ({ auth }) => {
           </Typography>
           <AccountTabs
             transactionsHistory={<TransactionsHistory transactions={commits} />}
-            transactionsList={<TransactionList movements={movementsList} />}
+            transactionsList={<TransactionList accountUid={uid} movements={movementsList} />}
           />
         </>
       ) : (
